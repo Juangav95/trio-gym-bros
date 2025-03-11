@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymBros Upload</title>
+    <style>
+        :root {
+            --color-black: #0a0a0a;
+            --color-orange: #e34c0c;
+            --color-yellow: #ffd100;
+            --neon-glow: 0 0 10px rgba(255, 107, 43, 0.5), 
+                         0 0 20px rgba(255, 107, 43, 0.3), 
+                         0 0 30px rgba(255, 107, 43, 0.1);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: var(--color-black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--neon-glow);
+            border: 1px solid rgba(255, 107, 43, 0.3);
+        }
+
+        h1 {
+            color: var(--color-orange);
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(255, 107, 43, 0.3),
+                         0 0 10px rgba(255, 209, 0, 0.2);
+            background: linear-gradient(90deg, var(--color-orange), var(--color-yellow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        select {
+            background: var(--color-black);
+            color: var(--color-yellow);
+            padding: 15px;
+            border: 2px solid var(--color-orange);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            width: 100%;
+            appearance: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* Nuevo estilo para el placeholder del select */
+        select option[value=""][disabled] {
+            color: rgba(255, 209, 0, 0.5); /* Color amarillo con 50% de opacidad */
+        }
+
+        select:focus {
+            box-shadow: var(--neon-glow);
+        }
+
+        .file-upload-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-black);
+            color: var(--color-orange);
+            padding: 15px;
+            border: 2px dashed var(--color-orange);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 10px;
+        }
+
+        .file-upload-label span {
+            display: block;
+            text-align: center;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--color-yellow);
+            box-shadow: var(--neon-glow);
+        }
+
+        #fileUpload {
+            display: none;
+        }
+
+        #fileName {
+            color: var(--color-yellow);
+            text-align: center;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+
+        button {
+            background: var(--color-orange);
+            color: var(--color-black);
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background: var(--color-yellow);
+            box-shadow: var(--neon-glow);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Nuevos estilos para los emojis de fuego */
+        .fire-emoji {
+            position: fixed;
+            font-size: 24px;
+            color: var(--color-orange);
+            animation: floatUp 3s linear forwards;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        /* Agregar después de los estilos existentes */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 20, 0.98);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--color-orange);
+            box-shadow: var(--neon-glow);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .success-modal img {
+            max-width: 300px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .success-modal p {
+            color: var(--color-yellow);
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Strongest man in the Trio Dinámico</h1>
+        <div class="upload-section">
+            <select id="userName" required>
+                <option value="" disabled selected>Integrante del Trio</option>
+                <option value="Gav">Gav 🐷</option>
+                <option value="Marin">Marin 🤨</option>
+                <option value="Dani">Dani 🤓</option>
+            </select>
+            
+            <select id="activity" required>
+                <option value="" disabled selected>Tipo de Actividad</option>
+                <option value="bici">Bici 🚴</option>
+                <option value="gym">Gym 🏋️‍♂️</option>
+                <option value="padel">Padel 💅</option>
+                <option value="app">App training 📱</option>
+                <option value="running">Running 🏃🏻‍♂️</option>
+                <option value="fuchibol">fuchibol ⚽️</option>
+            </select>
+            
+            <div class="file-upload-container">
+                <label for="fileUpload" class="file-upload-label">
+                    <span>📸 Tomar foto</span>
+                    <span>o</span>
+                    <span>🖼️ Elegir del carrete</span>
+                </label>
+                <input type="file" id="fileUpload" accept="image/jpeg,image/jpg,image/png,image/gif,video/*">
+                <div id="fileName"></div>
+            </div>
+
+            <button id="submitButton">Registrar Actividad</button>
+        </div>
+    </div>
+
+    <div class="success-modal" id="successModal">
+        <p>¡Actividad registrada exitosamente! 💪</p>
+        <img id="successGif" src="" alt="Success">
+        <p id="successMessage"></p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
